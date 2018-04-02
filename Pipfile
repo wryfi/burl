@@ -1,0 +1,27 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+django = ">=2.0.0"
+django-rest-framework = "*"
+"psycopg2" = "*"
+hashids = "*"
+django-rest-swagger = "*"
+
+
+[dev-packages]
+
+django-extensions = "*"
+werkzeug = "*"
+"e1839a8" = {path = ".", editable = true}
+ipython = "*"
+
+
+[requires]
+
+python_version = "3.6"
