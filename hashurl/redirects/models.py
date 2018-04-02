@@ -18,3 +18,20 @@ class Redirect(models.Model):
     @property
     def hashid(self):
         return utils.hashid_encode(self.id)
+
+    def save(self, *args, **kwargs):
+        """
+        Override the default save method to enforce our HASHID_BLACKLIST, a
+        list of strings that we do not want to accidentally issue as hashids.
+        In case of a collision, deleting the object and re-creating it gives
+        it a new id (from which hashid is derived).
+
+        :param args:
+        :param kwargs:
+        :return: Redirect
+        """
+        super(Redirect, self).save(*args, **kwargs)
+        if self.hashid in settings.HASHID_BLACKLIST:
+            self.delete()
+            self.save()
+        return self

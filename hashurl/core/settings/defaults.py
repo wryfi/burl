@@ -29,7 +29,7 @@ HOME = utils.get_env('HOME')
 SECRET_KEY = utils.get_env('HASHURL_SECRET_KEY')
 HASHID_SALT = utils.get_env('HASHURL_HASHID_SALT')
 HASHID_ALPHABET='abcdefghjkmnpqrstuvwxyz0123456789'
-HASH_BLACKLIST = ['admin', 'api']
+HASHID_BLACKLIST = ['admin', 'api']
 DEFAULT_REDIRECT_URL = 'https://en.wikipedia.org/'
 
 ROOT_URLCONF = 'hashurl.core.urls.root'
