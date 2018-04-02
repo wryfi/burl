@@ -15,20 +15,17 @@ import os
 from hashurl.core.utils import settings as utils
 
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+ALLOWED_HOSTS = []
+
 SETTINGS_MODULE = os.path.dirname(os.path.abspath(__file__))
 CORE_MODULE = os.path.dirname(SETTINGS_MODULE)
-
 MODULE_ROOT = os.path.dirname(CORE_MODULE)
 BASE_DIR = MODULE_ROOT
 PROJECT_ROOT = os.path.dirname(MODULE_ROOT)
+
 HOME = utils.get_env('HOME')
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = utils.get_env('HASHURL_SECRET_KEY')
 HASHID_SALT = utils.get_env('HASHURL_HASHID_SALT')
 HASHID_ALPHABET='abcdefghjkmnpqrstuvwxyz0123456789'
@@ -36,12 +33,6 @@ HASH_BLACKLIST = ['admin', 'api']
 DEFAULT_REDIRECT_URL = 'https://en.wikipedia.org/'
 
 ROOT_URLCONF = 'hashurl.core.urls.root'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
