@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 
-from hashurl.redirects.models import Redirect
-from hashurl.redirects.api.serializers import RedirectSerializer
+from burl.redirects.models import Redirect
+from burl.redirects.api.serializers import RedirectSerializer
 
 
 class RedirectViewSet(ModelViewSet):

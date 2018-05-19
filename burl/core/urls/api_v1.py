@@ -1,7 +1,7 @@
 from django.urls import include, path
 
-from hashurl.core.api import views
-from hashurl.redirects.api import urls_v1 as urls_urls
+from burl.core.api import views
+from burl.redirects.api import urls_v1 as urls_urls
 
 
 app_name = 'api_v1'

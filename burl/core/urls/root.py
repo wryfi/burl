@@ -1,4 +1,4 @@
-"""hashurl URL Configuration
+"""burl URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/redirects/
@@ -16,13 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from hashurl.core.api import views as api_views
-from hashurl.redirects import views as urls_views
+from burl.core.api import views as api_views
+from burl.redirects import views as redirect_views
 from . import api_v1
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', api_views.root, name='api-root'),
     path('api/v1/', include(api_v1, namespace='api_v1')),
-    path('<str:hashid>/', urls_views.redirect_hash)
+    path('<str:hashid>/', redirect_views.redirect_hash)
 ]

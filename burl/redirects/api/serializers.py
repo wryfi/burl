@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from hashurl.redirects.models import Redirect
+from burl.redirects.models import Redirect
 
 
 class RedirectSerializer(serializers.ModelSerializer):

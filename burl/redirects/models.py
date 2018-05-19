@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 
-from hashurl.redirects import utils
+from burl.redirects import utils
 
 
 class Redirect(models.Model):

@@ -3,8 +3,8 @@ import logging
 from django.conf import settings
 from django.http import HttpResponseRedirect
 
-from hashurl.redirects.models import Redirect
-from hashurl.redirects import utils
+from burl.redirects.models import Redirect
+from burl.redirects import utils
 
 
 logger = logging.getLogger(__name__)

@@ -13,9 +13,9 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'hashurl'
+NAME = 'burl'
 DESCRIPTION = 'url shortener'
-URL = 'hashurl'
+URL = 'burl'
 EMAIL = 'ch@wryfi.net'
 AUTHOR = 'wryfi'
 REQUIRES_PYTHON = '>=3.6'
@@ -33,7 +33,7 @@ REQUIRED = [
 here = os.path.abspath(os.path.dirname(__file__))
 
 long_description = """
-hashurl is a simple url shortener in django and hashids
+burl is a simple url shortener in django and hashids
 """
 
 # Load the package's __version__.py module as a dictionary.
@@ -118,7 +118,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'hashurl-manager=hashurl.manage:main'
+            'burl-manager=burl.manage:main'
         ]
     }
 )

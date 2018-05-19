@@ -1,7 +1,7 @@
 from rest_framework import routers
 from django.urls import include, path
 
-from hashurl.redirects.api import views, viewsets
+from burl.redirects.api import views, viewsets
 
 
 router = routers.SimpleRouter()

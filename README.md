@@ -1,3 +1,3 @@
-# hashurl
+# burl
 
-hashurl is a simple url shortener in django and hashids
+burl is a simple url shortener in django and hashids

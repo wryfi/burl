@@ -4,7 +4,7 @@ import sys
 
 
 def main():
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hashurl.core.settings.defaults")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "burl.core.conf.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError:
