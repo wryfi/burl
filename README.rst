@@ -2,16 +2,19 @@
 burl
 ####
 
-``burl`` (brief url) is a URL shortener written in Django. It has a simple REST API,
-created using Django Rest Framework, allowing it to integrate seamlessly as a
-microservice in many architectures.
+``burl`` (brief url) is a URL shortener written in Django. It has a simple REST
+API, allowing it to integrate seamlessly as a microservice in many
+application architectures.
 
-``burl`` uses `hashids <https://github.com/davidaurelio/hashids-python>`_
-against an object's primary key to produce short URL hashes.  While the
-salt used by hashids is user-configurable, it should be noted that it is
-technically possible to reverse hashid hashes.  For this application, an
-enumeration attack is probably not a major threat, but you can decide that
-for yourself.
+
+Implementation
+==============
+
+``burl`` uses `hashids <https://hashids.org/>`_ for automatically generated brief URLs.
+Each auto-generated BURL is created using a random salt and a random number passed into
+the hashids library. This value is then stored in the database. The random BURLs
+generated in this manner should be difficult to reverse engineer.
+
 
 Requirements
 ============
@@ -19,19 +22,19 @@ Requirements
 code
 ----
 
-``burl`` is written in python 3.6 and django 2.0.  It will probably run fine
-on python 3.4 and 3.5, but no effort at backwards compatibility is
-made. Python 2 is not supported.  ``burl`` should run anywhere python
-will run, most easily on a unix-like system.
+``burl`` is written in python 3 with django 2.  It will probably run fine
+on python 3.4+ but is developed on python 3.7. Python 2 is not supported.
+``burl`` should run anywhere python will run, most easily on a unix-like system.
 
 
 database
 --------
 
 ``burl`` requires a relational database.  Technically, any of the databases
-supported by django should work at this time, but development is focused on
-postgres, and future releases may introdudce postgres-specific code and/or
-features. Therefore, ``psycopg2`` is a required dependency.
+supported by django should work, but development is focused on
+postgres, and future releases may introduce postgres-specific code and/or
+features. Therefore, ``psycopg2`` is the required dependency, and it is up to
+the user to make alternative arrangements if a different database is to be used.
 
 You will need database development libraries on your system to build the postgres
 ``psycopg2`` module needed for postgresql.
@@ -50,7 +53,7 @@ development, in particular, the easiest way to set everything up is to use
 
 Once you have installed ``burl``, you will need to create a database for its
 use. The default configuration expects a database called ``burl``, owned by
-a user named ``burl``, with a password specified in
+a user named ``burl``, with a password specified in the environment variable
 ``$BURL_POSTGRES_PASSWORD``. You can alter these settings by overriding
 the django ``DATABASES`` configuration dictionary in your ``burlrc`` (see
 below).
@@ -81,7 +84,6 @@ Per the 12-factor app, secrets are read from environment variables. The followin
 environment variables must be set::
 
     BURL_SECRET_KEY="***********************************************"
-    BURL_HASHID_SALT="*******"
     BURL_POSTGRES_PASSWORD="***********"
 
 There are a variety of ways you can set these variables, using your system's

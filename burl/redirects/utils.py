@@ -1,3 +1,5 @@
+import secrets
+
 from django.conf import settings
 
 from hashids import Hashids
@@ -6,24 +8,15 @@ from hashids import Hashids
 hashid_hasher = Hashids(salt=settings.HASHID_SALT, alphabet=settings.HASHID_ALPHABET)
 
 
-def hashid_encode(*args):
+def make_burl(record_count):
     """
-    Encodes args as a hashid string using our settings.
+    Generates a non-unique burl short url
 
-    :param args: arguments (integers) to be encoded
-    :return: encoded hashid
+    :param record_count: number of records in the database
+    :return: burl short url
     :rtype: str
     """
-    return hashid_hasher.encode(*args)
-
-
-def hashid_decode(hashid):
-    """
-    Decode a hashid string to a set of integer values using our settings.
-
-    :param hashid: a hashid string
-    :type hashid: str
-    :return: decoded values
-    :rtype: tuple
-    """
-    return hashid_hasher.decode(hashid)
+    salt = secrets.token_hex(4)
+    hasher = Hashids(salt=salt, alphabet=settings.HASHID_ALPHABET)
+    random = secrets.randbelow(record_count + 1000)
+    return hasher.encode(random)

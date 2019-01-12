@@ -13,10 +13,9 @@ PROJECT_ROOT = os.path.dirname(MODULE_ROOT)
 
 HOME = utils.get_env('HOME')
 SECRET_KEY = utils.get_env('BURL_SECRET_KEY')
-HASHID_SALT = utils.get_env('BURL_HASHID_SALT')
-HASHID_ALPHABET = 'abcdefghjkmnpqrstuvwxyz0123456789'
-DEFAULT_REDIRECT_URL = 'https://c.xkcd.com/random/comic/'
-HASHID_BLACKLIST = ['admin', 'api']
+HASHID_ALPHABET = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ0123456789'
+DEFAULT_REDIRECT_URL = 'https://masterofallscience.com/meme/S02E08/331081.jpg?b64lines=IE9oLiBPaCwgbXkgZ29kLiBIb3cgZGlkIEkgZ2V0IGhlcmU_IEhlbGxvPyE='
+BURL_BLACKLIST = ['admin', 'api']
 
 ROOT_URLCONF = 'burl.core.urls.root'
 
