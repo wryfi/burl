@@ -16,6 +16,7 @@ SECRET_KEY = utils.get_env('BURL_SECRET_KEY')
 HASHID_ALPHABET = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ0123456789'
 DEFAULT_REDIRECT_URL = 'https://masterofallscience.com/meme/S02E08/331081.jpg?b64lines=IE9oLiBPaCwgbXkgZ29kLiBIb3cgZGlkIEkgZ2V0IGhlcmU_IEhlbGxvPyE='
 BURL_BLACKLIST = ['admin', 'api']
+ROUGH_COUNT_MIN = 1000
 
 ROOT_URLCONF = 'burl.core.urls.root'
 
@@ -155,4 +156,9 @@ LOGGING = {
           'level': 'DEBUG',
       },
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100,
 }

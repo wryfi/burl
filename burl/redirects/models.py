@@ -1,7 +1,13 @@
 from django.db import models, IntegrityError
 from django.conf import settings
+from django.db.models.manager import BaseManager
 
 from burl.redirects import utils
+from burl.redirects.database import RoughCountQuerySet
+
+
+class RedirectManager(BaseManager.from_queryset(RoughCountQuerySet)):
+    pass
 
 
 class Redirect(models.Model):
@@ -13,31 +19,42 @@ class Redirect(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     enabled = models.BooleanField(default=True)
+    objects = RedirectManager()
 
     def __str__(self):
-        return '/{} > {}'.format(self.burl, self.url)
+        return '/{} → {}'.format(self.burl, self.url)
+
+    @classmethod
+    def from_db(cls, db, field_names, values):
+        """
+        Override the from_db classmethod to add the loaded values from any
+        existing record to the instance. See django docs on customizing model loading.
+        """
+        instance = super().from_db(db, field_names, values)
+        instance._loaded_values = dict(zip(field_names, values))
+        return instance
 
     def save(self, *args, **kwargs):
         """
-        Override the default save method to enforce our HASHID_BLACKLIST, a
+        Override the default save method to enforce our BURL_BLACKLIST, a
         list of strings that we do not want to accidentally issue as hashids.
-        In case of a collision, deleting the object and re-creating it gives
-        it a new id (from which hashid is derived).
 
-        :param args:
-        :param kwargs:
         :return: Redirect
+        :rtype: burl.redirects.models.Redirect
         """
-        if not self.burl:
+        if self.burl and hasattr(self, '_loaded_values'):
+            if self.burl != self._loaded_values['burl']:
+                self.random = False
+        else:
             self.random = True
-            self.burl = utils.make_burl(Redirect.objects.count())
-            # TODO use validators for checking against blacklist (serializer and/or form)
-            #if self.burl in settings.HASHID_BLACKLIST:
-            #    self.burl = None
-            #    return self.save(*args, **kwargs)
+            self.burl = utils.make_burl(Redirect.objects.rough_count())
+            # TODO add validator in serializer
+            if self.burl in settings.BURL_BLACKLIST:
+                self.burl = None
+                return self.save(*args, **kwargs)
             try:
-                return super(Redirect, self).save(*args, **kwargs)
+                return super().save(*args, **kwargs)
             except IntegrityError:
                 self.burl = None
                 return self.save(*args, **kwargs)
-        return super(Redirect, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)

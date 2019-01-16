@@ -1,7 +1,6 @@
 import logging
 
 from django.http import HttpResponseRedirect
-from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
 from burl.redirects.models import Redirect
@@ -13,7 +12,7 @@ logger = logging.getLogger(__name__)
 def redirect(request, burl):
     try:
         redirect = Redirect.objects.get(burl=burl)
-    except ObjectDoesNotExist:
+    except Redirect.DoesNotExist:
         logger.error('failed to get redirect from burl {}'.format(burl))
         return HttpResponseRedirect(settings.DEFAULT_REDIRECT_URL)
     if redirect.enabled:

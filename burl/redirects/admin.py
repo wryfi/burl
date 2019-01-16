@@ -8,7 +8,11 @@ from burl.redirects.models import Redirect
 
 
 class RedirectForm(forms.ModelForm):
-    model = Redirect
+    random = forms.NullBooleanField(disabled=True)
+
+    class Meta:
+        model = Redirect
+        fields = '__all__'
 
     def clean_burl(self):
         burl = self.cleaned_data['burl']
