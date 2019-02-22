@@ -1,7 +1,7 @@
 import logging
 
-from django.http import HttpResponseRedirect
-from django.conf import settings
+from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import get_object_or_404
 
 from burl.redirects.models import Redirect
 
@@ -9,13 +9,9 @@ from burl.redirects.models import Redirect
 logger = logging.getLogger(__name__)
 
 
-def redirect(request, burl):
-    try:
-        redirect = Redirect.objects.get(burl=burl)
-    except Redirect.DoesNotExist:
-        logger.error('failed to get redirect from burl {}'.format(burl))
-        return HttpResponseRedirect(settings.DEFAULT_REDIRECT_URL)
+def get_redirect(request, burl):
+    redirect = get_object_or_404(Redirect, burl=burl)
     if redirect.enabled:
         return HttpResponseRedirect(redirect.url)
     else:
-        return HttpResponseRedirect(settings.DEFAULT_REDIRECT_URL)
+        raise Http404

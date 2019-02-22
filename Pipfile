@@ -9,11 +9,12 @@ django-rest-framework = "*"
 hashids = "*"
 django-rest-swagger = "*"
 "psycopg2" = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 django-extensions = "*"
 Werkzeug = "*"
-"e1839a8" = {path = ".", editable = true}
+e1839a8 = {path = ".",editable = true}
 ipython = "*"
 
 [requires]

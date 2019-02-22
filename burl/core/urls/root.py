@@ -25,5 +25,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', api_views.root, name='api-root'),
     path('api/v1/', include(api_v1, namespace='api_v1')),
-    path('<str:burl>/', redirect_views.redirect)
+    path('<str:burl>/', redirect_views.get_redirect, name='redirect')
 ]

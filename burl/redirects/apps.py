@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 
 
-class UrlsConfig(AppConfig):
-    name = 'redirects'
+class RedirectsConfig(AppConfig):
+    name = 'burl.redirects'
+    verbose_name = 'burl redirects'

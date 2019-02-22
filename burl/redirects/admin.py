@@ -7,9 +7,7 @@ from django.core.exceptions import ValidationError
 from burl.redirects.models import Redirect
 
 
-class RedirectForm(forms.ModelForm):
-    random = forms.NullBooleanField(disabled=True)
-
+class RedirectAdminForm(forms.ModelForm):
     class Meta:
         model = Redirect
         fields = '__all__'
@@ -22,7 +20,7 @@ class RedirectForm(forms.ModelForm):
 
 
 class RedirectAdmin(admin.ModelAdmin):
-    form = RedirectForm
+    form = RedirectAdminForm
 
 
 admin.site.register(Redirect, RedirectAdmin)

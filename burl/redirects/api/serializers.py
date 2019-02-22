@@ -4,8 +4,8 @@ from burl.redirects.models import Redirect
 
 
 class RedirectSerializer(serializers.ModelSerializer):
-    random = serializers.ReadOnlyField()
+    user = serializers.ReadOnlyField(required=False, source='user.id')
 
     class Meta:
         model = Redirect
-        fields = ('id', 'url', 'burl', 'description', 'user', 'random', 'enabled')
+        fields = ('burl', 'url', 'user', 'description', 'enabled')

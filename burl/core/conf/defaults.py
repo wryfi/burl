@@ -1,6 +1,6 @@
 import os
 
-from burl.core.utils import settings as utils
+from burl.core import utils
 
 DEBUG = False
 ALLOWED_HOSTS = []
@@ -14,11 +14,12 @@ PROJECT_ROOT = os.path.dirname(MODULE_ROOT)
 HOME = utils.get_env('HOME')
 SECRET_KEY = utils.get_env('BURL_SECRET_KEY')
 HASHID_ALPHABET = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ0123456789'
-DEFAULT_REDIRECT_URL = 'https://masterofallscience.com/meme/S02E08/331081.jpg?b64lines=IE9oLiBPaCwgbXkgZ29kLiBIb3cgZGlkIEkgZ2V0IGhlcmU_IEhlbGxvPyE='
 BURL_BLACKLIST = ['admin', 'api']
 ROUGH_COUNT_MIN = 1000
 
 ROOT_URLCONF = 'burl.core.urls.root'
+
+AUTH_USER_MODEL = 'core.BurlUser'
 
 # Application definition
 
@@ -31,11 +32,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'burl.core',
     'burl.redirects',
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -159,6 +162,12 @@ LOGGING = {
 }
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100,
 }
+
+CORS_ORIGIN_ALLOW_ALL = True
