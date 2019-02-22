@@ -55,6 +55,12 @@ class RedirectsApiTest(APITestCase):
         self.assertEquals(redirect.description, 'test1')
         self.assertTrue(redirect.enabled)
 
+    def test_create_blacklisted_redirect(self):
+        data = {'url': self.url, 'description': 'test1', 'burl': 'admin'}
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.amy.auth_token.key}')
+        post = self.client.post(self.list_create_url, data, format='json')
+        self.assertEquals(post.status_code, 400)
+
     def test_read_redirect(self):
         redirect = Redirect.objects.create(user=self.amy, url=self.url, description='hello, world!')
         url = reverse('api_v1:redirects:redirect-detail', kwargs={'burl': redirect.burl})

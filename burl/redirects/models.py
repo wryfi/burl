@@ -29,7 +29,6 @@ class Redirect(models.Model):
     def _save_burl(self):
         if self.burl:
             self.random = False
-            # TODO add validator in serializer for user-supplied burls
             if self.burl in settings.BURL_BLACKLIST:
                 raise ValidationError(f'burl "{self.burl}" is blacklisted by BURL_BLACKLIST setting')
         else:
