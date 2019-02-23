@@ -13,8 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.redirects import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.redirects'))
 """
+
+from django.views.generic import RedirectView
 from django.contrib import admin
 from django.urls import include, path
+from django.conf import settings
 
 from burl.core.api import views as api_views
 from burl.redirects import views as redirect_views
@@ -25,5 +28,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', api_views.root, name='api-root'),
     path('api/v1/', include(api_v1, namespace='api_v1')),
-    path('<str:burl>/', redirect_views.get_redirect, name='redirect')
+    path('<str:burl>/', redirect_views.get_redirect, name='redirect'),
+    path('', RedirectView.as_view(url=settings.DEFAULT_REDIRECT_URL))
 ]

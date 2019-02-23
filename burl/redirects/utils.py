@@ -5,9 +5,6 @@ from django.conf import settings
 from hashids import Hashids
 
 
-hashid_hasher = Hashids(salt=settings.HASHID_SALT, alphabet=settings.HASHID_ALPHABET)
-
-
 def make_burl(ceiling=1000):
     """
     Generates a non-unique burl short url

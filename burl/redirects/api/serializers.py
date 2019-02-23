@@ -5,7 +5,7 @@ from burl.redirects.models import Redirect
 
 
 class RedirectSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(required=False, source='user.id')
+    user = serializers.UUIDField(required=False, source='user.id')
 
     class Meta:
         model = Redirect

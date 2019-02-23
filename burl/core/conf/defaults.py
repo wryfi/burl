@@ -3,7 +3,7 @@ import os
 from burl.core import utils
 
 DEBUG = False
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 SETTINGS_MODULE = os.path.dirname(os.path.abspath(__file__))
 CORE_MODULE = os.path.dirname(SETTINGS_MODULE)
@@ -13,17 +13,19 @@ PROJECT_ROOT = os.path.dirname(MODULE_ROOT)
 
 HOME = utils.get_env('HOME')
 SECRET_KEY = utils.get_env('BURL_SECRET_KEY')
-HASHID_ALPHABET = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ0123456789'
-BURL_BLACKLIST = ['admin', 'api']
+HASHID_ALPHABET = utils.get_env('BURL_HASHID_ALPHABET', 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ0123456789')
+BURL_BLACKLIST = ['admin', 'api', 'static', 'media']
 ROUGH_COUNT_MIN = 1000
 
 ROOT_URLCONF = 'burl.core.urls.root'
 
 AUTH_USER_MODEL = 'core.BurlUser'
+DEFAULT_REDIRECT_URL = utils.get_env('DEFAULT_REDIRECT_URL', 'http://wryfi.net')
 
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -74,11 +77,11 @@ WSGI_APPLICATION = 'burl.core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'burl',
-        'USER': 'burl',
+        'NAME': utils.get_env('BURL_POSTGRES_DB', 'burl'),
+        'USER': utils.get_env('BURL_POSTGRES_USER', 'burl'),
         'PASSWORD': utils.get_env('BURL_POSTGRES_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': 5432
+        'HOST': utils.get_env('BURL_POSTGRES_HOST', '127.0.0.1'),
+        'PORT': int(utils.get_env('BURL_POSTGRES_PORT', 5432))
     },
 }
 
@@ -107,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'America/Los_Angeles'
+TIMEZONE = utils.get_env('BURL_TIMEZONE', 'America/Los_Angeles')
 
 USE_I18N = True
 
@@ -121,10 +124,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(HOME, 'var', 'burl', 'media')
-STATIC_ROOT = os.path.join(HOME, 'share', 'burl', 'static')
+MEDIA_ROOT = utils.get_env('BURL_MEDIA_ROOT', os.path.join(HOME, 'var', 'burl', 'media'))
+STATIC_ROOT = utils.get_env('BURL_STATIC_ROOT', os.path.join(HOME, 'share', 'burl', 'static'))
 
-LOG_DIR = utils.get_log_dir()
+LOG_DIR = utils.get_env('BURL_LOG_DIR', utils.get_log_dir())
+
+BURL_LOG_LEVEL = utils.get_env('BURL_LOG_LEVEL', 'WARNING')
+APP_LOG_LEVEL = utils.get_env('BURL_APP_LOG_LEVEL', 'INFO')
+
 
 LOGGING = {
     'version': 1,
@@ -140,26 +147,32 @@ LOGGING = {
     },
     'handlers': {
       'file': {
-          'level': 'DEBUG',
+          'level': BURL_LOG_LEVEL,
           'class': 'logging.handlers.RotatingFileHandler',
           'filename': os.path.join(LOG_DIR, 'burl.log'),
           'maxBytes': 1024 * 1024 * 5,  # 5MiB
           'backupCount': 5,
           'formatter': 'verbose'
       },
+      'console': {
+          'class': 'logging.StreamHandler',
+          'formatter': 'verbose',
+          'level': BURL_LOG_LEVEL
+      }
     },
     'loggers': {
-      'django': {
-          'handlers': ['file'],
-          'propagate': True,
-          'level': 'DEBUG',
+      '': {
+          'handlers': ['console'],
+          'level': APP_LOG_LEVEL,
       },
       'burl': {
-          'handlers': ['file'],
-          'level': 'DEBUG',
+          'handlers': ['console'],
+          'level': BURL_LOG_LEVEL,
       },
     }
 }
+
+API_PAGE_SIZE = int(utils.get_env('BURL_API_PAGE_SIZE', 100))
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -167,7 +180,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 100,
+    'PAGE_SIZE': API_PAGE_SIZE,
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

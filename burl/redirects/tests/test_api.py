@@ -12,8 +12,10 @@ class RedirectsApiTest(APITestCase):
     def setUpTestData(cls):
         cls.amy = get_user_model().objects.create_user('amy')
         cls.kif = get_user_model().objects.create_user('kif')
+        cls.bender = get_user_model().objects.create_user('bender', is_superuser=True)
         Token.objects.create(user=cls.amy)
         Token.objects.create(user=cls.kif)
+        Token.objects.create(user=cls.bender)
 
     def setUp(self):
         self.url = 'https://google.com'
@@ -55,6 +57,13 @@ class RedirectsApiTest(APITestCase):
         self.assertEquals(redirect.description, 'test1')
         self.assertTrue(redirect.enabled)
 
+    def test_create_redirect_superuser(self):
+        data = {'url': self.url, 'description': 'test1', 'burl': 'burl_test_1', 'user': str(self.amy.id)}
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.bender.auth_token.key}')
+        post = self.client.post(self.list_create_url, data, format='json')
+        self.assertEquals(post.status_code, 201)
+        self.assertEquals(post.json()['user'], str(self.amy.id))
+
     def test_create_blacklisted_redirect(self):
         data = {'url': self.url, 'description': 'test1', 'burl': 'admin'}
         self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.amy.auth_token.key}')
@@ -85,6 +94,42 @@ class RedirectsApiTest(APITestCase):
         response = self.client.get(url)
         self.assertEquals(response.status_code, 403)
 
+    def test_read_redirect_superuser(self):
+        redirect = Redirect.objects.create(user=self.amy, url=self.url)
+        url = reverse('api_v1:redirects:redirect-detail', kwargs={'burl': redirect.burl})
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.bender.auth_token.key}')
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.json()['user'], str(redirect.user.id))
+
+    def test_read_redirect_list(self):
+        Redirect.objects.create(user=self.amy, url=self.url)
+        Redirect.objects.create(user=self.kif, url=self.url)
+        url = reverse('api_v1:redirects:redirect-list')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.amy.auth_token.key}')
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.json()['results']), 1)
+        self.assertEquals(response.json()['results'][0]['user'], str(self.amy.id))
+
+    def test_read_redirect_list_no_auth(self):
+        Redirect.objects.create(user=self.amy, url=self.url)
+        url = reverse('api_v1:redirects:redirect-list')
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 403)
+
+    def test_read_redirect_list_superuser(self):
+        Redirect.objects.create(user=self.amy, url=self.url)
+        Redirect.objects.create(user=self.kif, url=self.url)
+        url = reverse('api_v1:redirects:redirect-list')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.bender.auth_token.key}')
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.json()['results']), 2)
+        users = [result['user'] for result in response.json()['results']]
+        self.assertIn(str(self.amy.id), users)
+        self.assertIn(str(self.kif.id), users)
+
     def test_update_redirect(self):
         redirect = Redirect.objects.create(user=self.amy, url=self.url)
         data = {'url': 'https://twitter.com', 'description': 'twitter', 'burl': 'twitter'}
@@ -112,6 +157,19 @@ class RedirectsApiTest(APITestCase):
         put = self.client.put(url, data, format='json')
         self.assertEquals(put.status_code, 403)
 
+    def test_udpate_redirect_superuser(self):
+        redirect = Redirect.objects.create(user=self.kif, url=self.url)
+        data = {'url': 'https://facebook.com', 'description': 'friendface', 'burl': 'zuck', 'user': str(self.amy.id)}
+        url = reverse('api_v1:redirects:redirect-detail', kwargs={'burl': redirect.burl})
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.bender.auth_token.key}')
+        put = self.client.put(url, data, format='json')
+        self.assertEquals(put.status_code, 200)
+        redirect.refresh_from_db()
+        self.assertEquals(redirect.burl, 'zuck')
+        self.assertEquals(redirect.description, 'friendface')
+        self.assertEquals(redirect.url, 'https://facebook.com')
+        self.assertEquals(redirect.user, self.amy)
+
     def test_delete_redirect(self):
         redirect = Redirect.objects.create(user=self.kif, url=self.url)
         url = reverse('api_v1:redirects:redirect-detail', kwargs={'burl': redirect.burl})
@@ -134,3 +192,11 @@ class RedirectsApiTest(APITestCase):
         delete = self.client.delete(url)
         self.assertEquals(delete.status_code, 403)
         self.assertEquals(len(Redirect.objects.filter(burl=redirect.burl)), 1)
+
+    def test_delete_redirect_superuser(self):
+        redirect = Redirect.objects.create(user=self.amy, url=self.url)
+        url = reverse('api_v1:redirects:redirect-detail', kwargs={'burl': redirect.burl})
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.bender.auth_token.key}')
+        delete = self.client.delete(url)
+        self.assertEquals(delete.status_code, 204)
+        self.assertEquals(len(Redirect.objects.filter(burl=redirect.burl)), 0)
