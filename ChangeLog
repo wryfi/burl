@@ -1,0 +1,18 @@
+CHANGES
+=======
+
+* update README
+* update README and add LICENSE
+* update README and SENDGRID\_API\_SETTING
+* enable swagger and various user management things
+* minor cleanup & major build improvements
+* add blacklist validator to serializer (& test)
+* test and refactor
+* fix some obvious scaling issues
+* use a burl field instead of deriving from object id
+* remove stale settings modules
+* remove README.md in favor of rst
+* rename to burl, many other little changes
+* override Redirect.save() to handle blacklisted hashids
+* minor reorgs
+* initial commit
