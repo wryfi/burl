@@ -11,10 +11,10 @@ Implementation
 ==============
 
 ``burl`` implements a URL shortening service by allowing authenticated users
-to create a brief URL pointing to any other URL.  When the brief URL is
-requested from ``burl``, it returns a redirect to the original URL. The user
-may specify the brief url, which must be globally unique, or the system
-will generate a random one.
+to create a brief URL pointing to any other URL.  When creating a brief URL,
+the user may specify the brief url, which must be globally unique, or the
+system will generate a random one. When the brief URL is requested from
+``burl``, it returns a redirect to the original URL.
 
 There are two primary interfaces to burl:
 
