@@ -18,6 +18,7 @@ from django.views.generic import RedirectView
 from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
+from django.contrib.auth import urls as account_urls
 
 from burl.core.api import views as api_views
 from burl.redirects import views as redirect_views
@@ -25,9 +26,11 @@ from . import api_v1
 
 
 urlpatterns = [
+    path('accounts/', include(account_urls)),
     path('admin/', admin.site.urls),
     path('api/', api_views.root, name='api-root'),
     path('api/v1/', include(api_v1, namespace='api_v1')),
+    path('api/v1/swagger/', api_views.SwaggerSchemaView.as_view()),
     path('<str:burl>/', redirect_views.get_redirect, name='redirect'),
     path('', RedirectView.as_view(url=settings.DEFAULT_REDIRECT_URL))
 ]

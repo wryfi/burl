@@ -1,0 +1,47 @@
+{% extends "core/__base.html" %}
+
+{% block body %}
+<div class="ui middle aligned center aligned grid">
+
+  <div class="column">
+    <h2 class="ui black image header">
+      <div class="content">
+        credentials, please
+      </div>
+    </h2>
+    {% if form.errors %}
+    <div class="ui icon error message">
+      <i class="exclamation triangle icon"></i>
+      <div class="content">
+        <div class="header">Validation Errors</div>
+            {{ form.errors }}
+      </div>
+    </div>
+    {% endif %}
+    <form method="post" class="ui large form">
+      {% csrf_token %}
+      <div class="ui stacked segment">
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" id="id_username" name="username" placeholder="username">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            <input type="password" id="id_password" name="password" placeholder="Password">
+          </div>
+        </div>
+        <button class="ui black button" type="submit">Authenticate</button>
+      </div>
+    </form>
+
+    <div class="ui message">
+      <a href="{% url "password_reset" %}">Password Reset</a>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

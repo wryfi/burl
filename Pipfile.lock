@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "82af563783943017200a7f72023f6b8cdf00134d2dc996af17ec328811324738"
+            "sha256": "30f74b8932e77d1f02c5d241b2af7300cb42e02414243e86e103e3427cb1c72d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -69,11 +69,19 @@
         },
         "django-rest-swagger": {
             "hashes": [
-                "sha256:48f6aded9937e90ae7cbe9e6c932b9744b8af80cc4e010088b3278c700e0685b",
-                "sha256:b039b0288bab4665cd45dc5d16f94b13911bc4ad0ed55f74ad3b90aa31c87c17"
+                "sha256:3471e6c21a3e97751fa6f7b81b66e916e40fa645cac36be1594c0efed810d247",
+                "sha256:ff889e2b339a9a57010dba7729d56471e05b77827f6dd36c0bcb983839882598"
             ],
             "index": "pypi",
-            "version": "==2.2.0"
+            "version": "==2.1.2"
+        },
+        "django-sendgrid-v5": {
+            "hashes": [
+                "sha256:471f718ae02c775f0f2ba8f901d5abb486b016805af8b2ac543ac9ff2f4164ec",
+                "sha256:c69ba0171b260c25def8048b69d931b46fbd8360b9aff4eb5477a284260fce0c"
+            ],
+            "index": "pypi",
+            "version": "==0.7.1"
         },
         "djangorestframework": {
             "hashes": [
@@ -81,6 +89,12 @@
                 "sha256:a4138613b67e3a223be6c97f53b13d759c5b90d2b433bad670b8ebf95402075f"
             ],
             "version": "==3.9.1"
+        },
+        "future": {
+            "hashes": [
+                "sha256:67045236dcfd6816dc439556d009594abf643e5eb48992e36beac09c2ca659b8"
+            ],
+            "version": "==0.17.1"
         },
         "gunicorn": {
             "hashes": [
@@ -192,6 +206,12 @@
             "index": "pypi",
             "version": "==2.7.7"
         },
+        "python-http-client": {
+            "hashes": [
+                "sha256:7e430f4b9dd2b621b0051f6a362f103447ea8e267594c602a5c502a0c694ee38"
+            ],
+            "version": "==3.1.0"
+        },
         "pytz": {
             "hashes": [
                 "sha256:32b0891edff07e28efe91284ed9c31e123d84bea3fd98e1f72be2508f43ef8d9",
@@ -205,6 +225,13 @@
                 "sha256:7bf2a778576d825600030a110f3c0e3e8edc51dfaafe1c146e39a2027784957b"
             ],
             "version": "==2.21.0"
+        },
+        "sendgrid": {
+            "hashes": [
+                "sha256:97eb356ea44a18a03e6fe99f02b7942445be306a50f73a7dd35471fe15cc0094",
+                "sha256:9e9d3d75602b8853f174ec959d1af1ac168cd361cbcafc81285fa8c183f7a505"
+            ],
+            "version": "==5.6.0"
         },
         "simplejson": {
             "hashes": [

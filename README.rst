@@ -10,10 +10,15 @@ application architectures.
 Implementation
 ==============
 
-``burl`` uses `hashids <https://hashids.org/>`_ for automatically generated brief URLs.
-Each auto-generated BURL is created using a random salt and a random number passed into
-the hashids library. This value is then stored in the database. The random BURLs
-generated in this manner should be difficult to reverse engineer.
+``burl`` implements a URL shortening service by allowing authenticated users
+to create a brief URL pointing to any other URL.  When the brief URL is
+requested from ``burl``, it returns a redirect to the original URL.
+
+``burl`` uses `hashids <https://hashids.org/>`_ for automatically generated
+brief URLs. Each auto-generated BURL is created using a random salt and a
+random number passed into the hashids library. This value is then stored in the
+database. The random BURLs generated in this manner should be sufficiently
+difficult to reverse engineer.
 
 
 Requirements
