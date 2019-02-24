@@ -207,7 +207,7 @@ SWAGGER_SETTINGS = {
 
 SENDGRID_API_KEY = utils.get_env('BURL_SENDGRID_API_KEY', 1)
 
-if SENDGRID_API_KEY == 1:
+if SENDGRID_API_KEY == 1 or SENDGRID_API_KEY == '':
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
     EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
