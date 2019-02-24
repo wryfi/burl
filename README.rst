@@ -12,13 +12,17 @@ Implementation
 
 ``burl`` implements a URL shortening service by allowing authenticated users
 to create a brief URL pointing to any other URL.  When the brief URL is
-requested from ``burl``, it returns a redirect to the original URL.
+requested from ``burl``, it returns a redirect to the original URL. The user
+may specify the brief url, which must be globally unique, or the system
+will generate a random one.
 
-There is a minimal restful API implemented with django rest framework.
-The current version can be found at ``/api/v1`` or you can view the
-swagger interface at ``/api/v1/swagger``.  Note that you will need to
-authenticate to view the relevant api endpoints. Session and
-token based authentication are enabled by default.
+There are two primary interfaces to burl:
+
+#. the built-in django admin at ``/admin``;
+#. a minimal restful API based on django rest framework (see ``/api/v1/swagger``).
+
+New brief URLs can only be created by authenticated users (via session auth
+or token auth).
 
 ``burl`` uses `hashids <https://hashids.org/>`_ for automatically generated
 brief URLs. Each auto-generated BURL is created using a random salt and a
@@ -33,19 +37,20 @@ Requirements
 code
 ----
 
-``burl`` is written in python 3 with django 2.1.  It will probably run fine
-on python 3.4+ but is developed on python 3.7. Python 2 is not supported.
+``burl`` requires python 3.6 or newer.  Python 2 is not supported.
+
 ``burl`` should run anywhere python will run, most easily on a unix-like system.
 
 
 database
 --------
 
-``burl`` requires a relational database.  Technically, any of the databases
-supported by django should work, but officially only postgres is supported.
+``burl`` requires a postgresql 9.4+ database.
 
-You will need database development libraries on your system to build the postgres
-``psycopg2`` module needed for postgresql.
+You will need a C compiler, python header files, and postgres development
+libraries on your system to build the postgres ``psycopg2`` module needed
+for postgresql.
+
 
 Installation
 ============
@@ -169,19 +174,47 @@ Docker
 
 The included Dockerfile builds a container that bundles burl with gunicorn and
 exposes gunicorn on port 8000.  It builds with uid ``65432`` by default, which
-you can change on the ``docker build`` command line.
+you can change on the ``docker build`` command line, e.g.::
+
+    docker build --build-arg uid=23456 -t burl .
 
 This container does not include postgres or nginx. You will need postgres to run
 burl, and you will want to put nginx in front of the container.
+
+Once you have a built container, it can be activated as follows::
+
+    docker run -dit -p 8000:8000 --env-file /etc/burl/env --add-host=dbhost:10.0.0.10 \
+        --restart unless-stopped burl:latest burl
 
 
 Development
 ===========
 
-``burl`` uses `pipenv <https://docs.pipenv.org/>`_ for managing dependencies
-and virtualenvs for development.
-`Why Python devs should use Pipenv <https://opensource.com/article/18/2/why-python-devs-should-use-pipenv>`_
-provides a nice explainer.
+``burl`` uses a modern python toolchain, consisting of:
+
+- `pipenv <https://docs.pipenv.org/>`_ for managing dependencies,
+- `pbr <https://docs.openstack.org/pbr/latest/>`_ build system,
+- docker support,
+- semantic version numbers,
+- git flow branching scheme.
+
+To start coding, first install ``pipenv``, then clone this repo and run
+``pipenv install -d``. This will set up a virtualenv, install all of
+the dependencies, and install burl in editable mode. You should now be
+able to run commands like ``pipenv shell``, ``pipenv run burl-manager test``,
+etc.
 
 When using ``pipenv`` you can make use of a ``.env`` file in the source root,
-and set the requisite environment variables (above) there.
+and set the requisite environment variables (above) there. This file is
+ignored in ``.gitignore`` and local to your environment.
+
+*See:*
+
+- `Why Python devs should use Pipenv <https://opensource.com/article/18/2/why-python-devs-should-use-pipenv>`_
+
+Tests
+-----
+
+``burl`` was not developed using TDD, but has reasonable test coverage.
+Tests are located in the standard places for django applications. New PRs
+should include relevant tests whenever possible.
