@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+v1.0.0
+------
+
+* prep for release
 * update README
 * update README and add LICENSE
 * update README and SENDGRID\_API\_SETTING

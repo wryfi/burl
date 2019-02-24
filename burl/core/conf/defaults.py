@@ -212,6 +212,5 @@ if SENDGRID_API_KEY == 1 or SENDGRID_API_KEY == '':
 else:
     EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
 
-USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
