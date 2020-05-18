@@ -5,7 +5,7 @@ from burl.redirects.api import views, viewsets
 
 
 router = routers.SimpleRouter()
-router.register(r'redirects', viewsets.RedirectViewSet, base_name='redirect')
+router.register(r'redirects', viewsets.RedirectViewSet, basename='redirect')
 
 
 urlpatterns = [

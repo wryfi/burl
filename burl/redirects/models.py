@@ -26,7 +26,7 @@ class Redirect(models.Model):
     def __str__(self):
         return f'/{self.burl} → {self.url}'
 
-    def _save_burl(self):
+    def _save_burl(self, count=0):
         if self.burl:
             self.random = False
             if self.burl in settings.BURL_BLACKLIST:

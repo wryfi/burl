@@ -18,6 +18,14 @@ class IsOwner(permissions.BasePermission):
 class RedirectViewSet(ModelViewSet):
     serializer_class = RedirectSerializer
     permission_classes = (IsOwner, IsAuthenticated)
+    filterset_fields = {
+        'enabled': ['exact'],
+        'description': ['exact', 'contains'],
+        'created': ['exact', 'lt', 'gt', 'lte', 'gte'],
+        'updated': ['exact', 'lt', 'gt', 'lte', 'gte'],
+        'url': ['exact', 'contains'],
+        'burl': ['exact', 'contains']
+    }
     lookup_field = 'burl'
 
     def get_queryset(self):

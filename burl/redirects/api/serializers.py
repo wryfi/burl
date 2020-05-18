@@ -9,7 +9,7 @@ class RedirectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Redirect
-        fields = ('burl', 'url', 'user', 'description', 'enabled')
+        fields = ('burl', 'url', 'user', 'description', 'enabled', 'created', 'updated')
 
     def validate_burl(self, value):
         if value in settings.BURL_BLACKLIST:

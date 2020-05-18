@@ -7,6 +7,16 @@ API, allowing it to integrate seamlessly as a microservice in many
 application architectures.
 
 
+Quick Start
+===========
+
+Grab the latest image off of docker hub::
+
+    docker pull wryfi/burl:latest
+    docker run -dit -p 8000:8000 --env-file /etc/burl/env --add-host=dbhost:10.0.0.10 \
+        --restart unless-stopped wryfi/burl:latest run
+    docker exec -it
+
 Implementation
 ==============
 

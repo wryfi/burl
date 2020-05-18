@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-Django = ">=2.0.0"
+Django = "<3.0"
 django-rest-framework = "*"
 hashids = "*"
 django-rest-swagger = "==2.1.2"
@@ -13,6 +13,7 @@ django-cors-headers = "*"
 gunicorn = "*"
 whitenoise = "*"
 django-sendgrid-v5 = "*"
+django-filter = "*"
 
 [dev-packages]
 django-extensions = "*"

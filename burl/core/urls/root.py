@@ -22,7 +22,7 @@ from django.contrib.auth import urls as account_urls
 
 from burl.core.api import views as api_views
 from burl.redirects import views as redirect_views
-from . import api_v1
+from burl.core.urls import api_v1
 
 
 urlpatterns = [
