@@ -20,19 +20,19 @@ class RedirectViewSet(ModelViewSet):
     permission_classes = (IsOwner, IsAuthenticated)
     filterset_fields = {
         'enabled': ['exact'],
-        'description': ['exact', 'contains'],
+        'description': ['exact', 'icontains'],
         'created': ['exact', 'lt', 'gt', 'lte', 'gte'],
         'updated': ['exact', 'lt', 'gt', 'lte', 'gte'],
-        'url': ['exact', 'contains'],
-        'burl': ['exact', 'contains']
+        'url': ['exact', 'icontains'],
+        'burl': ['exact', 'icontains']
     }
     lookup_field = 'burl'
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            return Redirect.objects.all()
+            return Redirect.objects.order_by('-updated')
         elif self.request.user.is_authenticated:
-            return Redirect.objects.filter(user=self.request.user)
+            return Redirect.objects.filter(user=self.request.user).order_by('-updated')
         else:
             return []
 

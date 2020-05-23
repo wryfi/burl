@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_framework_swagger',
     'django.contrib.admin',
     'django_filters'
 ]
@@ -174,10 +173,11 @@ LOGGING = {
     }
 }
 
-API_PAGE_SIZE = int(utils.get_env('BURL_API_PAGE_SIZE', 100))
+API_PAGE_SIZE = int(utils.get_env('BURL_API_PAGE_SIZE', 20))
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
@@ -194,7 +194,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/api/v1/swagger'
+LOGIN_REDIRECT_URL = '/api/v1/swagger/'
 LOGOUT_URL = '/accounts/logout/'
 
 SWAGGER_SETTINGS = {
@@ -203,7 +203,7 @@ SWAGGER_SETTINGS = {
             'type': 'apiKey',
             'in': 'header',
             'name': 'Authorization'
-        }
+        },
     },
 }
 

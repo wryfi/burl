@@ -30,7 +30,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', api_views.root, name='api-root'),
     path('api/v1/', include(api_v1, namespace='api_v1')),
-    path('api/v1/swagger/', api_views.SwaggerSchemaView.as_view()),
     path('<str:burl>/', redirect_views.get_redirect, name='redirect'),
     path('', RedirectView.as_view(url=settings.DEFAULT_REDIRECT_URL))
 ]

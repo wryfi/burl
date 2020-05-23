@@ -36,7 +36,7 @@ class RedirectsApiTest(APITestCase):
     def test_create_random_redirect_no_auth(self):
         data = {'url': 'https://google.com', 'user': self.kif.id}
         post = self.client.post(self.list_create_url, data, format='json')
-        self.assertEquals(post.status_code, 403)
+        self.assertEquals(post.status_code, 401)
 
     def test_create_random_redirect_wrong_user(self):
         data = {'url': 'https://google.com', 'user': self.kif.id}
@@ -92,7 +92,7 @@ class RedirectsApiTest(APITestCase):
         redirect = Redirect.objects.create(user=self.amy, url=self.url)
         url = reverse('api_v1:redirects:redirect-detail', kwargs={'burl': redirect.burl})
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 403)
+        self.assertEquals(response.status_code, 401)
 
     def test_read_redirect_superuser(self):
         redirect = Redirect.objects.create(user=self.amy, url=self.url)
@@ -116,7 +116,7 @@ class RedirectsApiTest(APITestCase):
         Redirect.objects.create(user=self.amy, url=self.url)
         url = reverse('api_v1:redirects:redirect-list')
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 403)
+        self.assertEquals(response.status_code, 401)
 
     def test_read_redirect_list_superuser(self):
         Redirect.objects.create(user=self.amy, url=self.url)
@@ -155,7 +155,7 @@ class RedirectsApiTest(APITestCase):
         data = {'url': 'https://facebook.com', 'description': 'friendface', 'burl': 'zuck'}
         url = reverse('api_v1:redirects:redirect-detail', kwargs={'burl': redirect.burl})
         put = self.client.put(url, data, format='json')
-        self.assertEquals(put.status_code, 403)
+        self.assertEquals(put.status_code, 401)
 
     def test_udpate_redirect_superuser(self):
         redirect = Redirect.objects.create(user=self.kif, url=self.url)
@@ -190,7 +190,7 @@ class RedirectsApiTest(APITestCase):
         redirect = Redirect.objects.create(user=self.amy, url=self.url)
         url = reverse('api_v1:redirects:redirect-detail', kwargs={'burl': redirect.burl})
         delete = self.client.delete(url)
-        self.assertEquals(delete.status_code, 403)
+        self.assertEquals(delete.status_code, 401)
         self.assertEquals(len(Redirect.objects.filter(burl=redirect.burl)), 1)
 
     def test_delete_redirect_superuser(self):
