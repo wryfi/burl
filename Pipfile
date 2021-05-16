@@ -16,13 +16,14 @@ django-filter = "<3"
 djangorestframework-simplejwt = "<5.0"
 pyyaml = "<6.0"
 uritemplate = "<4.0"
+burl = {path = "."}
 
 [dev-packages]
 django-extensions = "*"
 Werkzeug = "*"
 ipython = "*"
 pbr = "*"
-burl = {editable = true,path = "."}
+burl = {editable = true, path = "."}
 twine = "*"
 
 [requires]

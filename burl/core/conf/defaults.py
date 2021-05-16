@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 from burl.core import utils
 
@@ -178,7 +179,7 @@ API_PAGE_SIZE = int(utils.get_env('BURL_API_PAGE_SIZE', 20))
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
@@ -190,6 +191,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -205,6 +207,10 @@ SWAGGER_SETTINGS = {
             'name': 'Authorization'
         },
     },
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(seconds=600),
 }
 
 SENDGRID_API_KEY = utils.get_env('BURL_SENDGRID_API_KEY', 1)

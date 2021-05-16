@@ -1,9 +1,14 @@
 CHANGES
 =======
 
+* remove garbage
+* fix swagger and add jwt
+* add filter support, update libs, minor refactor
+
 v1.0.0
 ------
 
+* minor fixes
 * prep for release
 * update README
 * update README and add LICENSE

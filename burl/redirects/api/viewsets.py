@@ -30,9 +30,9 @@ class RedirectViewSet(ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            return Redirect.objects.order_by('-updated')
+            return Redirect.objects.order_by('-created')
         elif self.request.user.is_authenticated:
-            return Redirect.objects.filter(user=self.request.user).order_by('-updated')
+            return Redirect.objects.filter(user=self.request.user).order_by('-created')
         else:
             return []
 
