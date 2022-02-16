@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* last commit before v2
 * add pyproject.toml
 * Bump django from 2.2.22 to 2.2.25
 * Bump urllib3 from 1.26.4 to 1.26.5

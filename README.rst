@@ -6,6 +6,14 @@ burl
 API, allowing it to integrate seamlessly as a microservice in many
 application architectures.
 
+As of version 2, this application and repo is for the standalone burl server, which
+runs in a python container, ready for you to host wherever you want. It is a django
+server that integrates the django-burl django app, which anyone can likewise install and
+use in their own django application.
+
+The URL shortening data structures and logic are implemented in
+`django-burl <https://gitlab.com/wryfi/django-burl>`_. Give it a look if you are in need
+of your own URL shortening solution for a python/django application.
 
 Quick Start
 ===========

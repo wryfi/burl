@@ -21,15 +21,15 @@ from django.conf import settings
 from django.contrib.auth import urls as account_urls
 
 from burl.core.api import views as api_views
-from burl.redirects import views as redirect_views
+from django_burl import views as redirect_views
 from burl.core.urls import api_v1
 
 
 urlpatterns = [
-    path('accounts/', include(account_urls)),
-    path('admin/', admin.site.urls),
-    path('api/', api_views.root, name='api-root'),
-    path('api/v1/', include(api_v1, namespace='api_v1')),
-    path('<str:burl>/', redirect_views.get_redirect, name='redirect'),
-    path('', RedirectView.as_view(url=settings.DEFAULT_REDIRECT_URL))
+    path("accounts/", include(account_urls)),
+    path("admin/", admin.site.urls),
+    path("api/", api_views.root, name="api-root"),
+    path("api/v1/", include(api_v1, namespace="api_v1")),
+    path("<str:burl>/", redirect_views.get_redirect, name="redirect"),
+    path("", RedirectView.as_view(url=settings.DEFAULT_REDIRECT_URL)),
 ]
