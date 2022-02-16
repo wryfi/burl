@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+* add pyproject.toml
+* Bump django from 2.2.22 to 2.2.25
+* Bump urllib3 from 1.26.4 to 1.26.5
+* improvements for working with jwt more securely
 * remove garbage
 * fix swagger and add jwt
 * add filter support, update libs, minor refactor
