@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-Django = "<3.0"
+Django = "<4.0"
 psycopg2 = "==2.8.6"
 django-cors-headers = "<4.0"
 gunicorn = "<21.0"
