@@ -22,7 +22,7 @@ from django.contrib.auth import urls as account_urls
 
 from burl.core.api import views as api_views
 from django_burl import views as redirect_views
-from burl.core.urls import api_v1
+from burl.core.urls import api_v1, api_v2
 
 
 urlpatterns = [
@@ -30,6 +30,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", api_views.root, name="api-root"),
     path("api/v1/", include(api_v1, namespace="api_v1")),
+    path("api/v2/", include(api_v2, namespace="api_v2")),
     path("<str:burl>/", redirect_views.get_redirect, name="redirect"),
     path("", RedirectView.as_view(url=settings.DEFAULT_REDIRECT_URL)),
 ]
