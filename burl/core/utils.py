@@ -9,15 +9,23 @@ def get_env(setting, fallback=None):
         if fallback:
             return fallback
         else:
-            return ImproperlyConfigured("Please set the {} environment variable".format(setting))
+            return ImproperlyConfigured(
+                "Please set the {} environment variable".format(setting)
+            )
 
 
 def get_log_dir():
-    if 'HOME' in os.environ:
-        home = os.environ['HOME']
-        try_dirs = ['/var/log/burl', os.path.join(home, 'var', 'log', 'burl'), home, '/tmp/burl', '/tmp']
+    if "HOME" in os.environ:
+        home = os.environ["HOME"]
+        try_dirs = [
+            "/var/log/burl",
+            os.path.join(home, ".local", "var", "log", "burl"),
+            home,
+            "/tmp/burl",
+            "/tmp",
+        ]
     else:
-        try_dirs = ['/var/log/burl', '/tmp/burl', '/tmp']
+        try_dirs = ["/var/log/burl", "/tmp/burl", "/tmp"]
     for log_dir in try_dirs:
         if os.path.isdir(log_dir):
             if os.access(log_dir, os.W_OK):
