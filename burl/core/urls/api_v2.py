@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import (
 
 from burl.core.api import views
 from burl.core.api.viewsets import TokenCookieObtainPairView
-from django_burl.api import urls_v2 as burl_urls
+from django_burl.api.v2 import urls as burl_urls
 
 app_name = "api_v2"
 
