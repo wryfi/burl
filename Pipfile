@@ -13,7 +13,7 @@ django-sendgrid-v5 = "*"
 pyyaml = "*"
 burl = {editable = true, path = "."}
 django-burl = {editable = true, path = "/Users/wryfi/src/gitlab.com/wryfi/django-burl"}
-cfitall = {editable = true, path = "./../cfitall"}
+cfitall = ">=1.0.5"
 uritemplate = "*"
 
 [dev-packages]

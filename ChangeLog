@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* update settings to use cfitall
 * update to django4 and update dependencies
 * upgrade to django 3
 * remove tests from (unused) redirects module and added deprecation notice

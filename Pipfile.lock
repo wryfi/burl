@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "32bbe8c56d56c3a7e3a286f88ba7f5fdba6d231c5a2045ad0a5223fbd95af753"
+            "sha256": "3df2b21b1b1e636c6854521b9ef0728c426471c48d514dc9afba7be757eaf2c1"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -34,8 +34,12 @@
             "version": "==2021.10.8"
         },
         "cfitall": {
-            "editable": true,
-            "path": "./../cfitall"
+            "hashes": [
+                "sha256:19442d9c53c573e6a8f6ae686e8bce45af604573df7416a1f2d40708dbd366fc",
+                "sha256:cdaf37846466d12a2d0f18e50123f5a232466f7601383803ee6c2b4ad73e4824"
+            ],
+            "index": "pypi",
+            "version": "==1.0.5"
         },
         "charset-normalizer": {
             "hashes": [
