@@ -3,7 +3,7 @@ import os
 from cfitall.config import ConfigManager
 from burl.core import utils
 
-HOME = os.environ.get("HOME")
+home = os.environ.get("HOME")
 
 config = ConfigManager("burl")
 
@@ -18,11 +18,11 @@ config.set_default(
     "app.hashid_alphabet", "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ0123456789"
 )
 config.set_default(
-    "app.media_root", os.path.join(HOME, ".local", "var", "burl", "media")
+    "app.media_root", os.path.join(home, ".local", "var", "burl", "media")
 )
 config.set_default("app.timezone", "America/Los_Angeles")
 config.set_default(
-    "app.static_root", os.path.join(HOME, ".local", "share", "burl", "static")
+    "app.static_root", os.path.join(home, ".local", "share", "burl", "static")
 )
 
 config.set_default("db.default.name", "burl")
@@ -43,7 +43,6 @@ config.set_default(
 )
 config.set_default("security.sendgrid_api_key", "")
 
-home = os.environ.get("HOME")
 config.add_config_path("/etc/burl")
 config.add_config_path(os.path.join(home, ".local", "etc", "burl"))
 config.read_config()
