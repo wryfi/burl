@@ -20,7 +20,7 @@ config.set_default(
 config.set_default(
     "app.media_root", os.path.join(home, ".local", "var", "burl", "media")
 )
-config.set_default("app.timezone", "America/Los_Angeles")
+config.set_default("app.time_zone", "America/Los_Angeles")
 config.set_default(
     "app.static_root", os.path.join(home, ".local", "share", "burl", "static")
 )
@@ -37,6 +37,11 @@ config.set_default("logging.burl.level", "WARNING")
 config.set_default("logging.log_dir", utils.get_log_dir())
 
 config.set_default("security.allowed_hosts", ["*"])
+config.set_default("security.cors.allowed_origins", [])
+config.set_default("security.cors.allowed_origin_regexes", [])
+config.set_default("security.cors.allow_all_origins", False)
+config.set_default("security.jwt.access_lifetime", 600)
+config.set_default("security.jwt.refresh_lifetime", 86400)
 config.set_default(
     "security.secret_key",
     "xFLJ3AXXTpS5eODotsmxkzCOVIHmK7JZggV55YQjgWqKko7nGaLBJcwSfYVBP9JjfJjyZ",

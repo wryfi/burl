@@ -2,68 +2,231 @@
 burl
 ####
 
-``burl`` (brief url) is a URL shortener written in Django. It has a simple REST
-API, allowing it to integrate seamlessly as a microservice in many
-application architectures.
+``burl`` (brief url) is a URL shortener written in python with the django framework.
 
-As of version 2, this application and repo is for the standalone burl server, which
-runs in a python container, ready for you to host wherever you want. It is a django
-server that integrates the django-burl django app, which anyone can likewise install and
-use in their own django application.
+As of version 2, this application and repo is for the standalone burl service,
+providing a docker-packaged reference implementation of
+`django-burl <https://gitlab.com/wryfi/django-burl>`__. If you're looking for a
+URL-shortener to include in your own django project, *see*
+`django-burl <https://gitlab.com/wryfi/django-burl>`__.
 
-The URL shortening data structures and logic are implemented in
-`django-burl <https://gitlab.com/wryfi/django-burl>`_. Give it a look if you are in need
-of your own URL shortening solution for a python/django application.
+Features include:
+
+* data models and REST API from
+  `django-burl <https://gitlab.com/wryfi/django-burl>`__
+* JWT authentication
+* CORS management via `django-cors-headers <https://github.com/adamchainz/django-cors-headers>`__
+* swagger-ui
+* user model with ``UUIDField`` for its primary key
+* account management pages/templates
+* static assets served via `whitenoise <https://whitenoise.evans.io/en/stable/>`__
+* `gunicorn <https://gunicorn.org/>`__ WSGI server
+* easy configuration with `cfitall <https://github.com/wryfi/cfitall>`__
 
 Quick Start
 ===========
 
-Grab the latest image off of docker hub::
+First, configure a postgres user and database to host ``burl``'s data, then create
+a file ``/etc/burl/env`` specifing the environment variables for configuring
+``burl`` (see below).
+
+Run the latest image from docker hub (remember to change 10.0.0.10 to
+the ip of the postgres server you configured above)::
 
     docker pull wryfi/burl:latest
-    docker run -dit -p 8000:8000 --env-file /etc/burl/env --add-host=dbhost:10.0.0.10 \
+    docker run -dit --name=myburl -p 8000:8000 --env-file /etc/burl/env \
+        --add-host=dbhost:10.0.0.10 \
         --restart unless-stopped wryfi/burl:latest run
-    docker exec -it
+    docker exec -it myburl burl-manager createsuperuser
+    docker exec -it myburl burl-manager set_default_site --name localhost --domain localhost
+
+Point your browser to http://localhost:8000/admin and create some BURLs!
+
+Or go old school::
+
+    curl \
+      -X POST -H "Content-Type: application/json" \
+      -d '{"username": "dooper", "password": "sooperuser"}' \
+      http://localhost:8000/api/v2/token/auth
+    ...
+    {
+      "access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNDU2LCJqdGkiOiJmZDJmOWQ1ZTFhN2M0MmU4OTQ5MzVlMzYyYmNhOGJjYSJ9.NHlztMGER7UADHZJlxNG0WSi22a2KaYSfd1S-AuT7lU",
+      "refresh":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImNvbGRfc3R1ZmYiOiLimIMiLCJleHAiOjIzNDU2NywianRpIjoiZGUxMmY0ZTY3MDY4NDI3ODg5ZjE1YWMyNzcwZGEwNTEifQ.aEoAYkSJjoWH1boshQAaTkf8G3yn0kapko6HFRt7Rh4"
+    }
+
+    curl \
+      -X POST -H "Content-Type: application/json" \
+      -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNDU2LCJqdGkiOiJmZDJmOWQ1ZTFhN2M0MmU4OTQ5MzVlMzYyYmNhOGJjYSJ9.NHlztMGER7UADHZJlxNG0WSi22a2KaYSfd1S-AuT7lU" \
+      -d '{"url": "https://archive.org", "burl": "arc"}' \
+      http://localhost:8000/api/v2/burls/
+    ...
+    {
+      "burl": "arc",
+      "created": "2022-03-14T16:16:09.353538-05:00",
+      "description": "",
+      "enabled": true,
+      "updated": "2022-03-14T16:16:09.353543-05:00",
+      "url": "https://archive.org",
+      "user": "aec88b92-267f-430e-b4e2-0c63f4fc411a"
+    }
+
+    curl -IL "http://localhost:8000/arc/"
+    ...
+    HTTP/1.0 302 Found
+    Content-Type: text/html; charset=utf-8
+    Location: https://archive.org
+    X-Frame-Options: DENY
+    Content-Length: 0
+    X-Content-Type-Options: nosniff
+    Referrer-Policy: same-origin
+    Cross-Origin-Opener-Policy: same-origin
+    Vary: Origin
+    Server: Werkzeug/2.0.3 Python/3.10.2
+    Date: Mon, 14 Mar 2022 21:21:03 GMT
+
+    HTTP/1.1 200 OK
+    Server: nginx/1.18.0 (Ubuntu)
+    Date: Mon, 14 Mar 2022 21:21:04 GMT
+    Content-Type: text/html; charset=utf-8
+    Connection: close
+    vary: Accept-Encoding
+    Strict-Transport-Security: max-age=15724800
+    Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+
+Configuration
+=============
+
+``burl`` uses `cfitall <https://gitlab.com/wryfi/cfitall>`__ for managing its
+most commonly configured settings. It will search ``/etc/burl`` and then
+``~/.local/etc/burl`` for a ``burl.yml`` or ``burl.json`` settings file, and/or
+read its configuration from a series of environment variables.
+
+Example yaml file: ::
+
+    admin:
+      rough_count_min: 1000
+    api:
+      page_size: 25
+    app:
+      burl_blacklist:
+      - admin
+      - api
+      - static
+      - media
+      debug: true
+      default_redirect_url: https://archive.org/
+      hashid_alphabet: abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ0123456789
+      media_root: /Users/leela/.local/var/burl/media
+      static_root: /Users/leela/.local/share/burl/static
+      time_zone: America/Los_Angeles
+    db:
+      default:
+        engine: django.db.backends.postgresql_psycopg2
+        host: 127.0.0.1
+        name: burl
+        password: burl
+        port: 5432
+        user: burl
+    logging:
+      app:
+        level: INFO
+      burl:
+        level: WARNING
+      log_dir: /Users/leela/.local/var/log/burl
+    security:
+      allowed_hosts:
+      - localhost
+      - 127.0.0.1
+      cors:
+        allow_all_origins: false
+        allowed_origin_regexes:
+        - http:\/\/.*\.test:8000
+        allowed_origins:
+        - http://localhost:8000
+      jwt:
+        access_lifetime: 600
+        refresh_lifetime: 86400
+      secret_key: XXX
+      sendgrid_api_key: XXX
+
+Corresponding environment variables: ::
+
+    BURL__ADMIN__ROUGH_COUNT_MIN
+    BURL__API__PAGE_SIZE
+    BURL__APP__BURL_BLACKLIST
+    BURL__APP__DEBUG
+    BURL__APP__DEFAULT_REDIRECT_URL
+    BURL__APP__HASHID_ALPHABET
+    BURL__APP__MEDIA_ROOT
+    BURL__APP__STATIC_ROOT
+    BURL__APP__TIMEZONE
+    BURL__DB__DEFAULT__ENGINE
+    BURL__DB__DEFAULT__HOST
+    BURL__DB__DEFAULT__NAME
+    BURL__DB__DEFAULT__PASSWORD
+    BURL__DB__DEFAULT__PORT
+    BURL__DB__DEFAULT__USER
+    BURL__LOGGING__APP__LEVEL
+    BURL__LOGGING__BURL__LEVEL
+    BURL__LOGGING__LOG_DIR
+    BURL__SECURITY__ALLOWED_HOSTS
+    BURL__SECURITY__CORS__ALLOWED_ORIGINS
+    BURL__SECURITY__CORS__ALLOWED_ORIGIN_REGEXES
+    BURL__SECURITY__CORS__ALLOW_ALL_ORIGINS
+    BURL__SECURITY__JWT__ACCESS_LIFETIME
+    BURL__SECURITY__JWT__REFRESH_LIFETIME
+    BURL__SECURITY__SECRET_KEY
+    BURL__SECURITY__SENDGRID_API_KEY
+
+Of course, per the django convention, you can always set the
+``DJANGO_SETTINGS_MODULE`` environment variable to a python module of your
+choice, to further extend or bypass all of ``burl``'s settings and configuration
+mechanisms if needed.
+
+Configuration Notes
+-------------------
+
+Email
+~~~~~
+
+If you want working email (e.g. for password resets) the only supported option
+at this time is to use sendgrid.  Set the ``security.sendgrid_api_key`` setting
+(``BURL__SECURITY__SENDGRID_API_KEY`` environment variable) to enable sendgrid
+support. Otherwise all email is printed to the console and never sent.
+
+
+Development
+===========
 
 Implementation
-==============
+--------------
 
-``burl`` implements a URL shortening service by allowing authenticated users
-to create a brief URL pointing to any other URL.  When creating a brief URL,
-the user may specify the brief url, which must be globally unique, or the
-system will generate a random one. When the brief URL is requested from
-``burl``, it returns a redirect to the original URL.
+``burl`` is a reference implementation of
+`django-burl <https://gitlab.com/wryfi/django-burl>`__, which implements most
+of the functionality found in ``burl``. Please review django-burl's documentation
+for details.
 
-There are two primary interfaces to burl:
+``burl`` adds JWT authentication to django-burl via
+`Simple JWT <https://django-rest-framework-simplejwt.readthedocs.io/en/latest/>`__.
 
-#. the built-in django admin at ``/admin``;
-#. a minimal restful API based on django rest framework (see ``/api/v1/swagger``).
+The current Swagger UI (api documentation) can be found at ``/api/v2/swagger``
+of the running service.
 
-New brief URLs can only be created by authenticated users (via session auth
-or token auth).
+The django admin can be found as usual at ``/admin``.
 
-``burl`` uses `hashids <https://hashids.org/>`_ for automatically generated
-brief URLs. Each auto-generated BURL is created using a random salt and a
-random number passed into the hashids library. This value is then stored in the
-database. The random BURLs generated in this manner should be sufficiently
-difficult to reverse engineer.
+code requirements
+-----------------
 
-
-Requirements
-============
-
-code
-----
-
-``burl`` requires python 3.6 or newer.  Python 2 is not supported.
+``burl`` requires python 3.7 or newer.  Python 2 is not supported.
 
 ``burl`` should run anywhere python will run, most easily on a unix-like system.
 
 
-database
---------
+database requirements
+---------------------
 
-``burl`` requires a postgresql 9.4+ database.
+``burl`` strongly recommends using a postgresql database via python's
+``psycopg2`` library.
 
 You will need a C compiler, python header files, and postgres development
 libraries on your system to build the postgres ``psycopg2`` module needed
@@ -71,7 +234,7 @@ for postgresql.
 
 
 Installation
-============
+------------
 
 ``burl`` is made to be installed via the standard python installation methods.
 You can install it as simply as running::
@@ -84,13 +247,10 @@ everything up is to use ``pipenv`` (see below).
 
 Once you have installed ``burl``, you will need to create a database for its
 use. The default configuration expects a database called ``burl``, owned by
-a user named ``burl``, with a password specified in the environment variable
-``$BURL_POSTGRES_PASSWORD``. You can alter these settings by overriding
-the django ``DATABASES`` configuration dictionary in your ``burlrc`` (see
-below).
+a user named ``burl``, with a password of ``burl``. You should alter these
+settings by using the configuration mechanisms described above.
 
-Once your database is configured, run the database migrations to create
-the tables::
+Once your database is configured, run the database migrations to create::
 
     burl-manager migrate
 
@@ -102,80 +262,8 @@ Now you should be ready to run ``burl``!  You can run a test/development server
 by running ``burl-manager runserver`` to ensure that everything is working. In
 production, you should deploy behind a WSGI server.
 
-Configuration
-=============
-
-``burl`` adds two extra layers of configuration on top of the default Django
-settings mechanism.
-
-Configuration Notes
--------------------
-
-Email
-~~~~~
-
-If you want working email (e.g. for password resets) the only supported option
-at this time is to use sendgrid.  Set the environment variable
-``BURL_SENDGRID_API_KEY`` to enable sendgrid support. Otherwise all email is
-printed to the console and never sent.
-
-Environment Variables
----------------------
-
-Required Environment Variables
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Per the 12-factor app, secrets are read from environment variables. The following
-environment variables must be set::
-
-    BURL_SECRET_KEY="***********************************************"
-    BURL_POSTGRES_PASSWORD="***********"
-
-There are a variety of ways you can set these variables, using your system's
-init system, or your organization's infrastructure secrets management tools.
-
-Failing to set these variables will raise an ``ImproperlyConfigured`` exception.
-
-Optional Environment Variables
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Shown here with default values::
-
-    BURL_API_PAGE_SIZE=100
-    BURL_APP_LOG_LEVEL=INFO
-    BURL_HASHID_ALPHABET=abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ0123456789
-    BURL_LOG_LEVEL=WARNING
-    BURL_MEDIA_ROOT=$HOME/var/burl/media
-    BURL_POSTGRES_DB=burl
-    BURL_POSTGRES_HOST=127.0.0.1
-    BURL_POSTGRES_PORT=5432
-    BURL_POSTGRES_USER=burl
-    BURL_SENDGRID_API_KEY=''
-    BURL_STATIC_ROOT=$HOME/share/burl/static
-    BURL_TIMEZONE=America/Los_Angeles
-
-Configuration File
-------------------
-
-``burl`` is also configurable via an external configuration file; it will try
-each of the following paths in order, and will use the first file it finds:
-
-#. ``/etc/burl/burlrc``
-#. ``$HOME/.config/burl/burlrc``
-#. ``$HOME/etc/burl/burlrc``
-
-The ``burlrc`` file is loaded as a python module, after all other django settings
-are loaded.  Settings configured in ``burlrc`` will override previously-defined
-settings. ``burlrc`` can contain arbitrary python code, just like any Django settings
-module; and just like Django settings modules, only variables in ALL_CAPS are
-loaded.
-
-
 Deployment
-==========
-
-Standard Python
----------------
+----------
 
 ``burl`` is a straightforward django app, with nothing fancy.
 
@@ -205,8 +293,8 @@ Once you have a built container, it can be activated as follows::
         --restart unless-stopped burl:latest burl
 
 
-Development
-===========
+Tooling
+-------
 
 ``burl`` uses a modern python toolchain, consisting of:
 

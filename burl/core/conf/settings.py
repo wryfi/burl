@@ -118,14 +118,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIMEZONE = config.get("app.timezone")
+TIME_ZONE = config.get("app.time_zone", str)
 
 USE_I18N = True
 
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -194,13 +193,15 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = config.get("security.cors.allow_all_origins", bool)
+CORS_ALLOWED_ORIGINS = config.get("security.cors.allowed_origins", list)
+CORS_ALLOWED_ORIGIN_REGEXES = config.get("security.cors.allowed_origin_regexes", list)
 CORS_ALLOW_CREDENTIALS = True
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 LOGIN_URL = "/accounts/login/"
-LOGIN_REDIRECT_URL = "/api/v1/swagger/"
+LOGIN_REDIRECT_URL = "/api/v2/swagger/"
 LOGOUT_URL = "/accounts/logout/"
 
 SWAGGER_SETTINGS = {
@@ -210,7 +211,12 @@ SWAGGER_SETTINGS = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=600),
+    "ACCESS_TOKEN_LIFETIME": timedelta(
+        seconds=config.get("security.jwt.access_lifetime", int)
+    ),
+    "REFRESH_TOKEN_LIFETIME": timedelta(
+        seconds=config.get("security.jwt.refresh_lifetime", int)
+    ),
 }
 
 SENDGRID_API_KEY = config.get("security.sendgrid_api_key")

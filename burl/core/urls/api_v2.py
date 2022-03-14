@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
 )
 
 from burl.core.api import views
-from burl.core.api.viewsets import TokenCookieObtainPairView
+from burl.core.api.viewsets import TokenObtainUserPairView
 from django_burl.api.v2 import urls as burl_urls
 
 app_name = "api_v2"
@@ -16,7 +16,7 @@ urlpatterns = [
     path("", views.v2_root, name="root"),
     path("", include(burl_urls)),
     path("token/", views.v2_token_root, name="token_root"),
-    path("token/auth/", TokenCookieObtainPairView.as_view(), name="token_auth"),
+    path("token/auth/", TokenObtainUserPairView.as_view(), name="token_auth"),
     path("token/refresh/", csrf_exempt(views.token_refresh), name="token_refresh"),
     path(
         "token/refresh/revoke/", views.token_refresh_revoke, name="token_refresh_revoke"
