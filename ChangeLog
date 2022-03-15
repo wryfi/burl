@@ -1,9 +1,15 @@
 CHANGES
 =======
 
+v2.0.1
+------
+
+* update settings
+
 v2.0.0
 ------
 
+* changelog
 * meta
 * update Dockerfile and lock file
 * remove deprecated app and update bookmarklet
