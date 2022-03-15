@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+v2.0.0
+------
+
+* meta
 * update Dockerfile and lock file
 * remove deprecated app and update bookmarklet
 * bump django-burl version to get management commands
