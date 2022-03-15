@@ -32,9 +32,16 @@ config.set_default("db.default.host", "127.0.0.1")
 config.set_default("db.default.port", 5432)
 config.set_default("db.default.engine", "django.db.backends.postgresql_psycopg2")
 
-config.set_default("logging.app.level", "INFO")
-config.set_default("logging.burl.level", "WARNING")
+config.set_default("http.use_x_forwarded_host", True)
+config.set_default("http.secure_proxy_ssl_header_name", "HTTP_X_FORWARDED_PROTO")
+config.set_default("http.secure_proxy_ssl_header_value", "http")
+
+config.set_default("logging.app.level", "warn")
+config.set_default("logging.burl.level", "info")
 config.set_default("logging.log_dir", utils.get_log_dir())
+
+config.set_default("mail.default_from_email", "nobody@burl.test")
+config.set_default("mail.sendgrid_api_key", "")
 
 config.set_default("security.allowed_hosts", [])
 config.set_default("security.cors.allowed_origins", [])
@@ -44,9 +51,8 @@ config.set_default("security.jwt.access_lifetime", 600)
 config.set_default("security.jwt.refresh_lifetime", 86400)
 config.set_default(
     "security.secret_key",
-    "xFLJ3AXXTpS5eODotsmxkzCOVIHmK7JZggV55YQjgWqKko7nGaLBJcwSfYVBP9JjfJjyZ",
+    "jeirainooyieShaequeeng8av9gah6geiv1ooTh6quoo9meireeRayoo6un7xah",
 )
-config.set_default("security.sendgrid_api_key", "")
 
 config.add_config_path("/etc/burl")
 config.add_config_path(os.path.join(home, ".local", "etc", "burl"))

@@ -113,11 +113,11 @@ Example yaml file: ::
       - api
       - static
       - media
-      debug: true
-      default_redirect_url: https://archive.org/
+      debug: false
+      default_redirect_url: https://www.wikipedia.org/
       hashid_alphabet: abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ0123456789
-      media_root: /Users/leela/.local/var/burl/media
-      static_root: /Users/leela/.local/share/burl/static
+      media_root: /Users/burl/.local/var/burl/media
+      static_root: /Users/burl/.local/share/burl/static
       time_zone: America/Los_Angeles
     db:
       default:
@@ -127,27 +127,32 @@ Example yaml file: ::
         password: burl
         port: 5432
         user: burl
+    http:
+      secure_proxy_ssl_header_name: HTTP_X_FORWARDED_PROTO
+      secure_proxy_ssl_header_value: http
+      use_x_forwarded_hosts: true
     logging:
       app:
-        level: INFO
+        level: warn
       burl:
-        level: WARNING
-      log_dir: /Users/leela/.local/var/log/burl
+        level: info
+      log_dir: /Users/burl/.local/var/log/burl
+    mail:
+      default_from_email: nobody@burl.test
+      sendgrid_api_key: ''
     security:
       allowed_hosts:
       - localhost
       - 127.0.0.1
       cors:
         allow_all_origins: false
-        allowed_origin_regexes:
-        - http:\/\/.*\.test:8000
-        allowed_origins:
-        - http://localhost:8000
+        allowed_origin_regexes: []
+        allowed_origins: []
       jwt:
         access_lifetime: 600
         refresh_lifetime: 86400
-      secret_key: XXX
-      sendgrid_api_key: XXX
+      secret_key: jeirainooyieShaequeeng8av9gah6geiv1ooTh6quoo9meireeRayoo6un7xah
+      sendgrid_api_key: ''
 
 Corresponding environment variables: ::
 
@@ -159,16 +164,21 @@ Corresponding environment variables: ::
     BURL__APP__HASHID_ALPHABET
     BURL__APP__MEDIA_ROOT
     BURL__APP__STATIC_ROOT
-    BURL__APP__TIMEZONE
+    BURL__APP__TIME_ZONE
     BURL__DB__DEFAULT__ENGINE
     BURL__DB__DEFAULT__HOST
     BURL__DB__DEFAULT__NAME
     BURL__DB__DEFAULT__PASSWORD
     BURL__DB__DEFAULT__PORT
     BURL__DB__DEFAULT__USER
+    BURL__HTTP__SECURE_PROXY_SSL_HEADER_NAME
+    BURL__HTTP__SECURE_PROXY_SSL_HEADER_VALUE
+    BURL__HTTP__USE_X_FORWARDED_HOST
     BURL__LOGGING__APP__LEVEL
     BURL__LOGGING__BURL__LEVEL
     BURL__LOGGING__LOG_DIR
+    BURL__MAIL__DEFAULT_FROM_EMAIL
+    BURL__MAIL__SENDGRID_API_KEY
     BURL__SECURITY__ALLOWED_HOSTS
     BURL__SECURITY__CORS__ALLOWED_ORIGINS
     BURL__SECURITY__CORS__ALLOWED_ORIGIN_REGEXES
