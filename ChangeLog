@@ -1,6 +1,15 @@
 CHANGES
 =======
 
+* fix logging config
+* update README and tests
+* use BriefURLDefaultRedirect for default site redirect
+* update admin settings
+* update conf
+* enable sites framework
+* update paths to match django\_burl
+* add v2 api
+* bump cfitall version
 * update settings to use cfitall
 * update to django4 and update dependencies
 * upgrade to django 3
