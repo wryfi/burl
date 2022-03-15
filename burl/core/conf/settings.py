@@ -1,3 +1,4 @@
+import logging
 import os
 from datetime import timedelta
 
@@ -136,8 +137,16 @@ STATIC_ROOT = config.get("app.static_root")
 
 LOG_DIR = config.get("logging.log_dir")
 
-BURL_LOG_LEVEL = config.get("logging.burl.level")
-APP_LOG_LEVEL = config.get("logging.app.level")
+LOG_LEVELS = {
+    "debug": logging.DEBUG,
+    "info": logging.INFO,
+    "warning": logging.WARNING,
+    "error": logging.ERROR,
+    "critical": logging.CRITICAL,
+}
+
+BURL_LOG_LEVEL = LOG_LEVELS.get(config.get("logging.burl.level"), logging.WARN)
+APP_LOG_LEVEL = LOG_LEVELS.get(config.get("logging.app.level"), logging.WARN)
 
 
 LOGGING = {
