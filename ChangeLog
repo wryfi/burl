@@ -1,6 +1,11 @@
 CHANGES
 =======
 
+* update Dockerfile and lock file
+* remove deprecated app and update bookmarklet
+* bump django-burl version to get management commands
+* change activation of django\_extensions
+* remove erroneous Pipfile entry
 * update Pipfile.lock
 * fix logging config
 * update README and tests
