@@ -36,7 +36,7 @@ config.set_default("logging.app.level", "INFO")
 config.set_default("logging.burl.level", "WARNING")
 config.set_default("logging.log_dir", utils.get_log_dir())
 
-config.set_default("security.allowed_hosts", ["*"])
+config.set_default("security.allowed_hosts", [])
 config.set_default("security.cors.allowed_origins", [])
 config.set_default("security.cors.allowed_origin_regexes", [])
 config.set_default("security.cors.allow_all_origins", False)

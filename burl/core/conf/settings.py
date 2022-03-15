@@ -44,8 +44,12 @@ INSTALLED_APPS = [
     "django_burl",
 ]
 
-if DEBUG:
+try:
+    import django_extensions
+
     INSTALLED_APPS.append("django_extensions")
+except ImportError:
+    pass
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
