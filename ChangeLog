@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* update Pipfile.lock
 * fix logging config
 * update README and tests
 * use BriefURLDefaultRedirect for default site redirect

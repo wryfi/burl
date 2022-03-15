@@ -12,7 +12,6 @@ gunicorn = "*"
 whitenoise = "*"
 django-sendgrid-v5 = "*"
 pyyaml = "*"
-burl = {editable = true, path = "."}
 django-burl = ">=1.0.3"
 cfitall = ">=1.0.5"
 uritemplate = "*"
