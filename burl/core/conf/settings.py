@@ -16,38 +16,38 @@ PROJECT_ROOT = os.path.dirname(MODULE_ROOT)
 HOME = utils.get_env("HOME")
 
 # general application settings
-DEBUG = config.get("app.debug", bool)
-HASHID_ALPHABET = config.get("app.hashid_alphabet", str)
-BURL_BLACKLIST = config.get("app.burl_blacklist", list)
-ROUGH_COUNT_MIN = config.get("admin.rough_count_min", int)
+DEBUG = config.get_bool("app.debug")
+HASHID_ALPHABET = config.get_string("app.hashid_alphabet")
+BURL_BLACKLIST = config.get_list("app.burl_blacklist")
+ROUGH_COUNT_MIN = config.get_int("admin.rough_count_min")
 
 # security related settings
 AUTH_USER_MODEL = "core.BurlUser"
-SECRET_KEY = config.get("security.secret_key", str)
-ALLOWED_HOSTS = config.get("security.allowed_hosts", list)
+SECRET_KEY = config.get_string("security.secret_key")
+ALLOWED_HOSTS = config.get_list("security.allowed_hosts")
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = config.get("security.cors.allow_all_origins", bool)
-CORS_ALLOWED_ORIGINS = config.get("security.cors.allowed_origins", list)
-CORS_ALLOWED_ORIGIN_REGEXES = config.get("security.cors.allowed_origin_regexes", list)
+CORS_ALLOW_ALL_ORIGINS = config.get_bool("security.cors.allow_all_origins")
+CORS_ALLOWED_ORIGINS = config.get_list("security.cors.allowed_origins")
+CORS_ALLOWED_ORIGIN_REGEXES = config.get_list("security.cors.allowed_origin_regexes")
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(
-        seconds=config.get("security.jwt.access_lifetime", int)
+        seconds=config.get_int("security.jwt.access_lifetime")
     ),
     "REFRESH_TOKEN_LIFETIME": timedelta(
-        seconds=config.get("security.jwt.refresh_lifetime", int)
+        seconds=config.get_int("security.jwt.refresh_lifetime")
     ),
 }
 
 # localization related settings
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = config.get("app.time_zone", str)
+TIME_ZONE = config.get_string("app.time_zone")
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
 # http related settings
 WSGI_APPLICATION = "burl.core.wsgi.application"
-USE_X_FORWARDED_HOST = config.get("http.use_x_forwarded_host", bool)
+USE_X_FORWARDED_HOST = config.get_bool("http.use_x_forwarded_host")
 SECURE_PROXY_SSL_HEADER = (
     config.get("http.secure_proxy_ssl_header_name"),
     config.get("http.secure_proxy_ssl_header_value"),
@@ -74,7 +74,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "PAGE_SIZE": config.get("api.page_size"),
+    "PAGE_SIZE": config.get_int("api.page_size"),
     "DEFAULT_PARSER_CLASSES": [
         "rest_framework.parsers.JSONParser",
     ],
@@ -109,12 +109,12 @@ APP_LOG_LEVEL = LOG_LEVELS.get(config.get("logging.app.level"), logging.WARN)
 # database configuration
 DATABASES = {
     "default": {
-        "ENGINE": config.get("db.default.engine", str),
-        "NAME": config.get("db.default.name", str),
-        "USER": config.get("db.default.user", str),
-        "PASSWORD": config.get("db.default.password", str),
-        "HOST": config.get("db.default.host", str),
-        "PORT": config.get("db.default.port", int),
+        "ENGINE": config.get_string("db.default.engine"),
+        "NAME": config.get_string("db.default.name"),
+        "USER": config.get_string("db.default.user"),
+        "PASSWORD": config.get_string("db.default.password"),
+        "HOST": config.get_string("db.default.host"),
+        "PORT": config.get_int("db.default.port"),
     },
 }
 

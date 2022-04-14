@@ -1,11 +1,11 @@
 import os
 
-from cfitall.config import ConfigManager
+from cfitall.registry import ConfigurationRegistry
 from burl.core import utils
 
 home = os.environ.get("HOME")
 
-config = ConfigManager("burl")
+config = ConfigurationRegistry("burl")
 
 config.set_default("admin.rough_count_min", 1000)
 
@@ -54,6 +54,4 @@ config.set_default(
     "jeirainooyieShaequeeng8av9gah6geiv1ooTh6quoo9meireeRayoo6un7xah",
 )
 
-config.add_config_path("/etc/burl")
-config.add_config_path(os.path.join(home, ".local", "etc", "burl"))
-config.read_config()
+config.update()
