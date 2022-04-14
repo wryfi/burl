@@ -37,10 +37,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install pipenv
-        pipenv install -d
+        pip install pipenv
+        pipenv install -d -e .
     - name: Run unit tests
       env:
+        BURL__DB__DEFAULT__HOST: postgres
         BURL__DB__DEFAULT__USER: postgres
         BURL__DB__DEFAULT__PASSWORD: postgres
         DJANGO_SETTINGS_MODULE: burl.core.conf.settings
