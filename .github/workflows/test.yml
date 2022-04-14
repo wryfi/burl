@@ -43,7 +43,7 @@ jobs:
         pipenv install -d -e .
     - name: Run unit tests
       env:
-        BURL__DB__DEFAULT__HOST: postgres
+        BURL__DB__DEFAULT__HOST: localhost
         BURL__DB__DEFAULT__USER: postgres
         BURL__DB__DEFAULT__PASSWORD: postgres
         DJANGO_SETTINGS_MODULE: burl.core.conf.settings
